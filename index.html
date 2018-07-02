@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Test site byDaki</title>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+</head>
+
+<body>
+	
+<form action="" id="logform" method="post">
+<fieldset>
+<legend>LOG IN</legend>	
+E-mail: <br>
+<input type="text" name="logmail" ><br>
+Password: <br>
+<input type="password" name="logpass"><br><br>
+<input type="reset" value="Reset">
+<input type="button" value="Log in" name="btnlog" onclick="server(log())">
+</fieldset>	
+</form>
+	
+	<br><br>
+	<p id="demo" style="position: relative;padding: 5px;font-size: 15px;font-weight: bold;"></p>
+	<br><br>
+	
+<form action="" id="regform" method="post" onsubmit="return(server(reg()))">
+<fieldset>
+<legend>REGISTER</legend>
+Korisničko ime: <br>
+<input type="text" name="ime" required><br>
+E-mail: <br>
+<input type="email" name="mejl" required placeholder> <br>
+Password: <br>
+<input type="password" name="pass" required ><br><br>
+<input type="reset" value="Reset" name="reset">
+<button type="button" name="btnreg" onclick="server(reg())">Register</button>
+
+</fieldset>	
+</form>
+
+<script>
+function server(){
+	var xml = new XMLHttpRequest();
+	var text = document.getElementById('demo');
+	xml.onreadystatechange=function(){
+		if(this.readyState == 4 && this.status == 200){
+			if(this.responseText == "great"){
+				text.innerHTML="REGISTER FINISH";
+				setTimeout('window.location="pocetna.php"',3000);
+			}else if(this.responseText == "super"){
+				text.innerHTML="Welcome User to our site";
+				setTimeout('window.location="pocetna.php"',3000);
+			}else{
+				text.innerHTML=this.responseText.toUpperCase();
+			}
+			
+		}
+	};
+	xml.open("POST",this.link,true);
+	xml.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+	xml.send("data="+this.podaci);
+}
+function reg(server){
+	link ="model/register.php";
+	var ime = document.getElementsByName('ime')[0].value;
+	var mejl=document.getElementsByName('mejl')[0].value;
+	var sifra=document.getElementsByName('pass')[0].value;
+	podaci=JSON.stringify({ime,mejl,sifra});
+	console.log(podaci);	
+}	
+function log(server){
+	link ="model/login.php";
+	var logmejl = document.getElementsByName('logmail')[0].value;
+	var logsifra = document.getElementsByName('logpass')[0].value;
+	podaci=JSON.stringify({logmejl,logsifra});
+	console.log(podaci);
+}
+
+
+/*  JQuery primer
+function server(){
+	$(document).ready(function(){
+		$.post(link,"data="+podaci,function(responseText,statusText,xhr){
+			if(statusText == "success" && responseText == "great"){
+				$("#demo").text("REGISTER FINISH");
+				setTimeout('window.location="pocetna.php"',3000);
+			} else if (statusText == "success" && responseText == "super"){
+				$("#demo").text("Welcome User to our site");
+				setTimeout('window.location="pocetna.php"',3000);
+			} else {
+				alert(responseText);
+			}
+		});
+	});
+};
+function reg(){
+	link = "model/register.php";
+	var ime = $("input[name=ime]").val();
+	var mejl = $("input[name=mejl]").val();
+	var sifra = $("input[name=pass]").val();
+	podaci = JSON.stringify({ime,mejl,sifra});
+	console.log(podaci);
+};
+function log(){
+	link = "model/login.php";
+	var logmejl = $("input[name=logmail]").val();
+	var logsifra = $("input[name=logpass]").val();
+	podaci = JSON.stringify({logmejl,logsifra});
+	console.log(podaci);
+};
+
+*/
+</script>
+
+
+</body>
+</html>
